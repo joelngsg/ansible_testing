@@ -8,9 +8,9 @@
     #     workflow_data: "{{ passed_workflow_data | default({}) }}"
     - name: Read previous workflow data
       ansible.builtin.set_fact:
-      passed_workflow_data: >-
-        {{ lookup('ansible.builtin.varnames', '^passed_workflow_data__[0-9]+$', wantlist=True)
-          | sort | map('extract', vars) | combine(recursive=True) }}
+        passed_workflow_data: >-
+          {{ lookup('ansible.builtin.varnames', '^passed_workflow_data__[0-9]+$', wantlist=True)
+            | sort | map('extract', vars) | combine(recursive=True) }}
 
     - name: Modify workflow data
       ansible.builtin.set_fact:

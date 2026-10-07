@@ -1,0 +1,27 @@
+---
+- name: Playbook to read previous data and send a new set of data
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    # # - name: Read previous workflow data
+    # #   ansible.builtin.set_fact:
+    # #     workflow_data: "{{ passed_workflow_data | default({}) }}"
+    # - name: Read previous workflow data
+    #   ansible.builtin.set_fact:
+    #     workflow_data: >-
+    #       {{ lookup('ansible.builtin.varnames', '^passed_workflow_data__[0-9]+$', wantlist=True)
+    #         | sort | map('extract', vars) | combine(recursive=True) }}
+
+    - name: Modify workflow data
+      ansible.builtin.set_fact:
+        workflow_data: "{{ workflow_data | default({}) | ansible.builtin.combine({data_key:data_value}) }}"
+    
+    - name: Print workflow_data
+      ansible.builtin.debug:
+        msg: "{{ workflow_data }}"
+
+    - name: Pass workflow data
+      ansible.builtin.set_stats:
+        data:
+          "{{ { 'passed_workflow_data__' ~ ('%010d' | format(awx_job_id | int)): workflow_data } }}"
+          # "passed_workflow_data_{{ data_key }}": "{{ workflow_data }}"

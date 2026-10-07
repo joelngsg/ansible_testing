@@ -1,0 +1,20 @@
+---
+- name: Playbook to read previous data and send a new set of data
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Read previous workflow data
+      ansible.builtin.set_fact:
+        workflow_data: "{{ passed_workflow_data | default({}) }}"
+
+    - name: Modify workflow data
+      ansible.builtin.set_fact:
+        workflow_data: "{{ workflow_data | ansible.builtin.combine({data_key:data_value}) }}"
+    
+    - name: Print workflow_data
+      ansible.builtin.debug:
+        msg: "{{ workflow_data }}"
+
+    - name: Pass workflow data
+      ansible.builtin.set_stats:
+        passed_workflow_data: "{{ workflow_data }}"

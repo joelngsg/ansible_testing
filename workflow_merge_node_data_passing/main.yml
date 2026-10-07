@@ -17,4 +17,5 @@
 
     - name: Pass workflow data
       ansible.builtin.set_stats:
-        passed_workflow_data: "{{ workflow_data }}"
+        data:
+          passed_workflow_data: "{{ workflow_data }}"
